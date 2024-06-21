@@ -5,7 +5,6 @@ from typing import List, Union
 from fastapi import FastAPI
 import joblib
 
-
 description = """
 Welcome to the GetAround Car Value Prediction API. This app provides an endpoint to predict car values based on various features! Try it out 🕹️
 
@@ -55,8 +54,13 @@ async def predict(predictionFeatures: PredictionFeatures):
     
     car_data_dict = {col: [val] for col, val in zip(columns, predictionFeatures.CarData)}
     car_data = pd.DataFrame(car_data_dict)
-    loaded_model = joblib.load('best_model_XGBoost.pkl')
-    prediction = loaded_model.predict(car_data)
+
+    # model_file = hf_hub_download(repo_id="2nzi/GetAround-CarPrediction", filename="best_model_XGBoost.pkl")
+    # with open(model_file, 'rb') as f:
+    #     model = pickle.load(f)
+
+    model = joblib.load('best_model_XGBoost.pkl')
+    prediction = model.predict(car_data)
     response = {"prediction": prediction.tolist()[0]}
     return response
 
